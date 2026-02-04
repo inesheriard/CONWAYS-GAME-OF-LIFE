@@ -58,6 +58,6 @@ while running:
         pg.draw.rect(screen, blanc, (x, y, TILE_SIZE-1, TILE_SIZE-1)) #Dessin du rectangle (-1 pour laisser un quadrillage)
     MAT = update(MAT)
     pg.display.flip()
-    clock.tick(10)
+    clock.tick(7)
 
 pg.quit()
