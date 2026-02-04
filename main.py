@@ -3,9 +3,9 @@ import pygame as pg
 
 WIDTH, HEIGHT = 800, 600
 TILE_SIZE = 10
-COL = WIDTH // TILE_SIZE
-ROW = HEIGHT // TILE_SIZE
-MAT = np.random.choice([0,1], size=(ROW, COL), p=[0.85, 0.15])
+NB_COL = WIDTH // TILE_SIZE
+NB_ROW = HEIGHT // TILE_SIZE
+MAT = np.random.choice([0,1], size=(NB_ROW, NB_COL), p=[0.85, 0.15])
 
 def update(mat):
     #Calcul du total des voisins à chaque tour
@@ -21,7 +21,7 @@ def update(mat):
         )
     
     #Initialisation à chaque tour d'une matrice de 0
-    NEW_MAT = np.zeros((ROW, COL), dtype=int) #Règle de mort inutile comme on a ici tout initialisé à 0
+    NEW_MAT = np.zeros((NB_ROW, NB_COL), dtype=int) #Règle de mort inutile comme on a ici tout initialisé à 0
 
     #Règle de naissance
     NEW_MAT[(mat == 0) & (total_voisins == 3)] = 1
@@ -41,23 +41,33 @@ noir = (0,0,0)
 blanc = (255,255,255)
 jaune = (255,255,0)
 running = True
+paused = False
 
 while running:
-    #Quitter le jeu avec la croix
     for event in pg.event.get():
-        if event.type==pg.QUIT:
+        if event.type==pg.QUIT: #Quitter le jeu avec la croix
             running = False
+        if event.type==pg.KEYDOWN and event.key==pg.K_SPACE: #Mettre en pause
+            paused = not paused
+        if event.type==pg.MOUSEBUTTONDOWN: #Modifier les cellules en cliquant
+            x, y = event.pos
+            col_corresp = x // TILE_SIZE
+            row_corresp = y // TILE_SIZE
+            MAT[row_corresp, col_corresp] = 1 - MAT[row_corresp, col_corresp]
+
+
 
     screen.fill(noir) #Fond noir
 
-    rows, cols =  np.where(MAT == 1)
-    for i in range(len(rows)):
+    filled_rows, filled_cols =  np.where(MAT == 1)
+    for i in range(len(filled_rows)):
         #Calcul des positions x et y en pixels
-        x = cols[i]*TILE_SIZE
-        y = rows[i]*TILE_SIZE
+        x = filled_cols[i]*TILE_SIZE
+        y = filled_rows[i]*TILE_SIZE
         pg.draw.rect(screen, blanc, (x, y, TILE_SIZE-1, TILE_SIZE-1)) #Dessin du rectangle (-1 pour laisser un quadrillage)
-    MAT = update(MAT)
+    if paused == False:
+        MAT = update(MAT)
     pg.display.flip()
-    clock.tick(7)
+    clock.tick(7) #Nombre d'images par seconde
 
 pg.quit()
