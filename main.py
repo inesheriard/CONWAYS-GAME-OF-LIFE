@@ -62,6 +62,26 @@ glider = np.array(
     [0,0,1],
     [1,1,1]]
     )
+pulsar = np.zeros((13,13), dtype=int)
+pulsar[0, 2:5]=1 #Attention ! L'indice de fin est exclus, donc on va jusqu'à 5 pour les 3 cases
+pulsar[0, 8:11]=1
+pulsar[5, 2:5]=1
+pulsar[5, 8:11]=1
+pulsar[7, 2:5]=1
+pulsar[7, 8:11]=1
+pulsar[12, 2:5]=1
+pulsar[12, 8:11]=1
+pulsar[2:5, 0]=1 #On inverse la syntaxe pour les colonnes
+pulsar[8:11, 0]=1
+pulsar[2:5, 5]=1
+pulsar[8:11, 5]=1
+pulsar[2:5, 7]=1
+pulsar[8:11, 7]=1
+pulsar[2:5, 12]=1
+pulsar[8:11, 12]=1
+#On aurait aussi pu utiliser la méthode .T de la bibliothèque np pour obtenir la transposée de la matrice :
+#On réécrit les 8 expressions qui permettent de définir les lignes, puis on appelle :
+#pulsar += pulsar.T
 
 #Début de la boucle de jeu
 running = True
@@ -88,6 +108,11 @@ while running:
             col_corresp = x // TILE_SIZE
             row_corresp = y // TILE_SIZE
             MAT[row_corresp:row_corresp+3, col_corresp:col_corresp+3]=glider
+        if event.type==pg.KEYDOWN and event.key==pg.K_p:
+            (x,y)=pg.mouse.get_pos()
+            col_corresp = x //TILE_SIZE
+            row_corresp = y //TILE_SIZE
+            MAT[row_corresp:row_corresp+13, col_corresp:col_corresp+13]=pulsar
 
         
 
