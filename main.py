@@ -62,6 +62,7 @@ glider = np.array(
     [0,0,1],
     [1,1,1]]
     )
+
 pulsar = np.zeros((13,13), dtype=int)
 pulsar[0, 2:5]=1 #Attention ! L'indice de fin est exclus, donc on va jusqu'à 5 pour les 3 cases
 pulsar[0, 8:11]=1
@@ -82,6 +83,36 @@ pulsar[8:11, 12]=1
 #On aurait aussi pu utiliser la méthode .T de la bibliothèque np pour obtenir la transposée de la matrice :
 #On réécrit les 8 expressions qui permettent de définir les lignes, puis on appelle :
 #pulsar += pulsar.T
+
+
+canon=np.zeros((9,36), dtype=int)
+#Outline du canon DONE
+canon[4:7, 10]=1
+canon[3:4, 11]=1
+canon[7:8, 11]=1
+canon[4:7, 16]=1
+canon[3:4, 15]=1
+canon[7:8, 15]=1
+#Petit carré du début DONE
+canon[4:6, 0]=1
+canon[4:6, 1]=1
+#Eléments du milieu du cannon et sa "bouche"
+canon[2, 12:14]=1
+canon[8, 12:14]=1
+canon[5:6, 14]=1
+canon[5:6, 17]=1
+#Le rectangle et ses "ailes"
+canon[2:5, 20]=1
+canon[2:5, 21]=1
+canon[1:2, 22]=1
+canon[5:6, 22]=1
+canon[0:2, 24]=1
+canon[5:7, 24]=1
+#Petit carré à la fin DONE
+canon[2:4, 34]=1
+canon[2:4, 35]=1
+
+
 
 #Début de la boucle de jeu
 running = True
@@ -113,7 +144,13 @@ while running:
             col_corresp = x //TILE_SIZE
             row_corresp = y //TILE_SIZE
             MAT[row_corresp:row_corresp+13, col_corresp:col_corresp+13]=pulsar
-
+        if event.type==pg.KEYDOWN and event.key==pg.K_c:
+            (x,y)=pg.mouse.get_pos()
+            col_corresp = x //TILE_SIZE
+            row_corresp = y //TILE_SIZE
+            MAT[row_corresp:row_corresp+9, col_corresp:col_corresp+36]=canon
+        if event.type==pg.KEYDOWN and event.key==pg.K_BACKSPACE:
+            MAT.fill(0)
         
 
     #Changement des états des cellules (mortes/vivantes) et coloration dynamique
