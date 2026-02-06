@@ -84,34 +84,35 @@ pulsar[8:11, 12]=1
 #On réécrit les 8 expressions qui permettent de définir les lignes, puis on appelle :
 #pulsar += pulsar.T
 
-
 canon=np.zeros((9,36), dtype=int)
-#Outline du canon DONE
+#Outline du canon
 canon[4:7, 10]=1
 canon[3:4, 11]=1
 canon[7:8, 11]=1
 canon[4:7, 16]=1
 canon[3:4, 15]=1
 canon[7:8, 15]=1
-#Petit carré du début DONE
-canon[4:6, 0]=1
-canon[4:6, 1]=1
+#Petit carré du début
+canon[4:6, 0:2]=1
 #Eléments du milieu du cannon et sa "bouche"
 canon[2, 12:14]=1
 canon[8, 12:14]=1
 canon[5:6, 14]=1
 canon[5:6, 17]=1
 #Le rectangle et ses "ailes"
-canon[2:5, 20]=1
-canon[2:5, 21]=1
+canon[2:5, 20:22]=1
 canon[1:2, 22]=1
 canon[5:6, 22]=1
 canon[0:2, 24]=1
 canon[5:7, 24]=1
-#Petit carré à la fin DONE
-canon[2:4, 34]=1
-canon[2:4, 35]=1
+#Petit carré à la fin
+canon[2:4, 34:36]=1
 
+kok_galaxy=np.zeros((9,9), dtype=int)
+kok_galaxy[0:2, 0:6]=1
+kok_galaxy[0:6, 7:9]=1
+kok_galaxy[7:9, 3:9]=1
+kok_galaxy[3:9, 0:2]=1
 
 
 #Début de la boucle de jeu
@@ -133,22 +134,31 @@ while running:
             col_corresp = x // TILE_SIZE #Index de la colonne correspondante à la coordonnée x
             row_corresp = y // TILE_SIZE #Index de la ligne correspondante à la coordonnée y
             MAT[row_corresp, col_corresp] = 1 - MAT[row_corresp, col_corresp] #Changement de l'état (morte/vivante) de la cellule en cliquant
-        #Ajout d'un glider en cliquant
+        #Ajout d'un glider en appuyant sur g
         if event.type==pg.KEYDOWN and event.key==pg.K_g:
             (x,y)=pg.mouse.get_pos()
             col_corresp = x // TILE_SIZE
             row_corresp = y // TILE_SIZE
             MAT[row_corresp:row_corresp+3, col_corresp:col_corresp+3]=glider
+        #Ajout d'un pulsar en appuyant sur p
         if event.type==pg.KEYDOWN and event.key==pg.K_p:
             (x,y)=pg.mouse.get_pos()
             col_corresp = x //TILE_SIZE
             row_corresp = y //TILE_SIZE
             MAT[row_corresp:row_corresp+13, col_corresp:col_corresp+13]=pulsar
+        #Ajout d'un Glider Gun (canon à gliders) en appuyant sur c
         if event.type==pg.KEYDOWN and event.key==pg.K_c:
             (x,y)=pg.mouse.get_pos()
             col_corresp = x //TILE_SIZE
             row_corresp = y //TILE_SIZE
             MAT[row_corresp:row_corresp+9, col_corresp:col_corresp+36]=canon
+        #Ajout d'une Galaxie de Kok en appuyant sur k
+        if event.type==pg.KEYDOWN and event.key==pg.K_k:
+            (x,y)=pg.mouse.get_pos()
+            col_corresp = x // TILE_SIZE
+            row_corresp = y // TILE_SIZE
+            MAT[row_corresp:row_corresp+9, col_corresp:col_corresp+9]=kok_galaxy
+        #Reset de l'écran en noir en appuyant sur backspace
         if event.type==pg.KEYDOWN and event.key==pg.K_BACKSPACE:
             MAT.fill(0)
         
